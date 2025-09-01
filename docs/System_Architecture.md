@@ -30,22 +30,26 @@
 ## **1. Executive Summary**
 
 ### **1.1 Architecture Overview**
-The Promptly system is designed as a distributed, cloud-native architecture that provides seamless AI-powered text enhancement capabilities across mobile platforms. The architecture emphasizes low latency, high availability, and secure processing of user text data while maintaining privacy and scalability.
+The Promptly system is designed as a comprehensive, cloud-native architecture that provides universal AI-powered text enhancement capabilities through system-level integration. The architecture supports advanced features including custom prompting, tone analysis, smart replies, universal translation, specialized Quranic pronunciation, and general text-to-speech across all mobile applications.
 
 ### **1.2 Key Architectural Principles**
-- **Mobile-First Design**: Optimized for mobile device constraints and user experience
-- **Privacy by Design**: Minimal data retention with end-to-end encryption
-- **Microservices Architecture**: Modular, scalable backend services
-- **Platform Agnostic**: Cross-platform compatibility through Flutter
-- **Real-time Performance**: Sub-2-second response times for all operations
-- **Offline Capability**: Core functionality available without network connectivity
+- **Universal Integration**: System-level text processing across any mobile application
+- **Multi-AI Architecture**: Integration with multiple AI providers (OpenAI GPT, Google Gemini) for enhanced capabilities
+- **Contextual Intelligence**: Smart feature suggestions based on text content and user context
+- **Privacy by Design**: Minimal data retention with secure processing and user consent
+- **Microservices Architecture**: Domain-specific services for scalability and maintainability
+- **Platform-Optimized**: Native integration using Android accessibility and iOS extensions
+- **Real-time Performance**: Sub-2-second response times with intelligent caching
+- **Offline Capability**: Essential features available without network connectivity
 
 ### **1.3 Architecture Goals**
-- Support 10,000+ concurrent users with 99.9% uptime
-- Process text enhancement requests in < 2 seconds
-- Maintain data privacy and regulatory compliance
-- Enable rapid feature deployment and scaling
-- Provide consistent experience across Android and iOS
+- Support 50,000+ concurrent users with 99.9% uptime
+- Process all AI operations (enhancement, translation, tone analysis) in < 2 seconds
+- Handle complex conversation context analysis for smart replies
+- Maintain data privacy and GDPR/CCPA compliance
+- Enable rapid deployment of new AI features and models
+- Provide seamless experience across Android and iOS with platform-specific optimizations
+- Support specialized audio processing for 50+ languages with Tajweed compliance
 
 ---
 
@@ -69,13 +73,24 @@ graph TB
     end
     
     %% Application Layer
-    subgraph "Application Services"
+    subgraph "Core AI Services"
         API[API Gateway<br/>Authentication & Routing]
         TS[Text Service<br/>Processing & Analysis]
-        AS[AI Service<br/>GPT Integration]
-        TRS[Translation Service<br/>Multi-language]
-        QS[Quran Service<br/>Audio & Text]
+        AS[AI Service<br/>Multi-LLM Integration]
+        CP[Custom Prompt Engine<br/>User-defined Instructions]
+    end
+    
+    subgraph "Language & Communication"
+        TRS[Translation Service<br/>Multi-language Detection]
+        SC[Smart Communication<br/>Replies & Tone Analysis]
+        UA[Universal Audio<br/>TTS & Read Aloud]
+        QS[Quran Service<br/>Tajweed Pronunciation]
+    end
+    
+    subgraph "Platform & Support"
+        US[User Service<br/>Profiles & Preferences]
         NS[Notification Service<br/>Push & Events]
+        AS_SVC[Analytics Service<br/>Usage Tracking]
     end
     
     %% Data Layer
@@ -87,11 +102,18 @@ graph TB
     end
     
     %% External Services
-    subgraph "External APIs"
-        OAI[OpenAI API<br/>Text Processing]
+    subgraph "External AI Services"
+        OAI[OpenAI GPT-4<br/>Text Enhancement]
+        GEMINI[Google Gemini<br/>Advanced AI]
         GT[Google Translate<br/>Language Detection]
-        TTS[Text-to-Speech<br/>Pronunciation]
-        QA[Quran Audio API<br/>Recitation Files]
+        DEEPL[DeepL API<br/>Professional Translation]
+    end
+    
+    subgraph "Audio & Speech Services"
+        GTTS[Google TTS<br/>Multi-language]
+        ATTS[Arabic TTS<br/>Tajweed Engine]
+        QA[Quran Audio CDN<br/>Recitation Files]
+        NATIVE[Platform TTS<br/>Native Engines]
     end
     
     %% Connections
@@ -128,25 +150,29 @@ graph TB
 ### **2.2 Architecture Layers**
 
 #### **Presentation Layer**
-- **Mobile Application (Flutter)**: Cross-platform mobile app
-- **System Overlay Services**: Platform-specific text selection integration
-- **User Interface Components**: Floating overlays and action menus
+- **Mobile Application (Flutter)**: Cross-platform mobile app with BLoC state management
+- **System Overlay Services**: Platform-specific text selection and floating UI integration
+- **Custom Keyboard Extensions**: Inline AI suggestions and text processing
+- **User Interface Components**: Context-aware floating overlays, mini-interface, and action menus
 
 #### **Application Layer**
-- **API Gateway**: Request routing, authentication, rate limiting
-- **Microservices**: Domain-specific services for text processing, AI, translation
-- **Background Services**: Async processing and notification handling
+- **API Gateway (Kong)**: Advanced routing, authentication, rate limiting, and API versioning
+- **Core AI Services**: Multi-LLM integration, custom prompt processing, text analysis
+- **Communication Services**: Smart replies, tone analysis, conversation context processing
+- **Audio Services**: Universal TTS, specialized Arabic pronunciation, background audio management
+- **Background Services**: Async processing, caching, and intelligent prefetching
 
 #### **Data Layer**
-- **Cache Layer (Redis)**: High-speed caching for frequent requests
-- **Database (Firestore)**: User preferences and application data
-- **Object Storage**: Audio files and static assets
-- **Analytics Storage**: Usage metrics and performance data
+- **Multi-Tier Cache (Redis)**: L1 (memory), L2 (Redis), L3 (database) caching strategy
+- **Database (PostgreSQL)**: Primary data storage with read replicas and partitioning
+- **Object Storage (S3)**: Audio files, voice datasets, and static assets with CDN
+- **Analytics Storage**: Usage metrics, performance data, and AI quality scoring
 
 #### **Integration Layer**
-- **External APIs**: AI services, translation, and audio content
-- **Message Queues**: Async communication between services
-- **Event Streaming**: Real-time data processing
+- **Multi-AI Provider Integration**: OpenAI, Google Gemini, specialized TTS engines
+- **Platform APIs**: Android accessibility services, iOS share extensions, keyboard APIs
+- **Message Queues**: Async communication, background jobs, and event processing
+- **Circuit Breakers**: Fault tolerance and fallback mechanisms for external services
 
 ---
 
@@ -210,23 +236,71 @@ graph TB
     style API fill:#fff3e0
 ```
 
-### **3.2 Key Mobile Components**
+### **3.2 Enhanced Mobile Architecture Components**
 
-#### **Text Selection Engine**
+#### **Universal Text Selection Engine**
 ```dart
-// Platform-specific text selection detection
+// Enhanced platform-specific text selection with context awareness
 abstract class TextSelectionDetector {
-  Stream<TextSelection> get selectionStream;
+  Stream<TextSelectionEvent> get selectionStream;
   Future<void> startDetection();
   Future<void> stopDetection();
+  Future<TextContext> analyzeContext(String text);
 }
 
 class AndroidTextDetector extends TextSelectionDetector {
-  // Android Accessibility Service integration
+  late AccessibilityService accessibilityService;
+  late ConversationAnalyzer conversationAnalyzer;
+  
+  @override
+  Future<TextContext> analyzeContext(String text) async {
+    final appContext = await accessibilityService.getCurrentAppContext();
+    final conversationHistory = await conversationAnalyzer.getRecentMessages();
+    
+    return TextContext(
+      selectedText: text,
+      sourceApp: appContext.packageName,
+      inputFieldType: appContext.inputType,
+      conversationHistory: conversationHistory,
+      detectedLanguage: await detectLanguage(text),
+      suggestedFeatures: await getSuggestedFeatures(text, appContext),
+    );
+  }
 }
 
 class IOSTextDetector extends TextSelectionDetector {
-  // iOS Share Extension integration
+  late ShareExtensionManager shareExtension;
+  late KeyboardExtensionManager keyboardExtension;
+  
+  @override
+  Future<TextContext> analyzeContext(String text) async {
+    final context = await shareExtension.getShareContext();
+    return TextContext(
+      selectedText: text,
+      sourceApp: context.sourceApplication,
+      inputFieldType: InputFieldType.unknown, // iOS limitation
+      detectedLanguage: await detectLanguage(text),
+      suggestedFeatures: await getSuggestedFeatures(text, context),
+    );
+  }
+}
+
+class TextContext {
+  final String selectedText;
+  final String sourceApp;
+  final InputFieldType inputFieldType;
+  final List<Message>? conversationHistory;
+  final String detectedLanguage;
+  final List<AIFeature> suggestedFeatures;
+  
+  const TextContext({
+    required this.selectedText,
+    required this.sourceApp,
+    required this.inputFieldType,
+    this.conversationHistory,
+    required this.detectedLanguage,
+    required this.suggestedFeatures,
+  });
 }
 ```
 
@@ -244,23 +318,149 @@ class OverlayManager {
 }
 ```
 
-#### **AI Service Client**
+#### **Enhanced AI Service Client**
 ```dart
 class AIServiceClient {
-  Future<RewriteResponse> rewriteText(
-    String text,
-    RewriteType type,
-  );
+  final Dio _httpClient;
+  final CacheManager _cacheManager;
+  final CircuitBreaker _circuitBreaker;
   
+  AIServiceClient({
+    required Dio httpClient,
+    required CacheManager cacheManager,
+    required CircuitBreaker circuitBreaker,
+  }) : _httpClient = httpClient,
+       _cacheManager = cacheManager,
+       _circuitBreaker = circuitBreaker;
+
+  // Enhanced text processing with custom prompts
+  Future<EnhancementResponse> enhanceText(
+    String text,
+    EnhancementRequest request,
+  ) async {
+    final cacheKey = _generateCacheKey(text, request);
+    
+    // Check cache first
+    final cached = await _cacheManager.get<EnhancementResponse>(cacheKey);
+    if (cached != null) {
+      return cached;
+    }
+    
+    // Make API call with circuit breaker
+    final response = await _circuitBreaker.execute(() async {
+      return await _httpClient.post('/api/v2/text/enhance', data: {
+        'text': text,
+        'enhancement_type': request.type.name,
+        'custom_prompt': request.customPrompt,
+        'target_tone': request.targetTone?.name,
+        'context': request.context?.toJson(),
+      });
+    });
+    
+    final result = EnhancementResponse.fromJson(response.data);
+    
+    // Cache result
+    await _cacheManager.set(cacheKey, result, duration: Duration(hours: 1));
+    
+    return result;
+  }
+  
+  // Smart conversation analysis and reply generation
+  Future<SmartReplyResponse> generateSmartReplies(
+    List<Message> conversationHistory,
+    ReplyStyle style,
+  ) async {
+    return await _circuitBreaker.execute(() async {
+      final response = await _httpClient.post('/api/v2/communication/smart-replies', data: {
+        'conversation_history': conversationHistory.map((m) => m.toJson()).toList(),
+        'reply_style': style.name,
+        'max_suggestions': 3,
+      });
+      
+      return SmartReplyResponse.fromJson(response.data);
+    });
+  }
+  
+  // Tone analysis and adjustment
+  Future<ToneAnalysisResponse> analyzeTone(
+    String text,
+    ToneAdjustmentRequest? adjustment,
+  ) async {
+    return await _circuitBreaker.execute(() async {
+      final response = await _httpClient.post('/api/v2/communication/tone-analysis', data: {
+        'text': text,
+        'adjustment': adjustment?.toJson(),
+      });
+      
+      return ToneAnalysisResponse.fromJson(response.data);
+    });
+  }
+  
+  // Enhanced translation with alternatives
   Future<TranslationResponse> translateText(
     String text,
-    String targetLanguage,
-  );
+    String targetLanguage, {
+    bool includeAlternatives = true,
+    bool includePronunciation = false,
+  }) async {
+    final cacheKey = 'translation:${text.hashCode}:$targetLanguage';
+    final cached = await _cacheManager.get<TranslationResponse>(cacheKey);
+    
+    if (cached != null) {
+      return cached;
+    }
+    
+    final response = await _circuitBreaker.execute(() async {
+      return await _httpClient.post('/api/v2/language/translate', data: {
+        'text': text,
+        'target_language': targetLanguage,
+        'include_alternatives': includeAlternatives,
+        'include_pronunciation': includePronunciation,
+      });
+    });
+    
+    final result = TranslationResponse.fromJson(response.data);
+    await _cacheManager.set(cacheKey, result, duration: Duration(hours: 24));
+    
+    return result;
+  }
   
-  Future<PronunciationResponse> getPronunciation(
+  // Universal audio processing
+  Future<AudioResponse> getAudioPronunciation(
     String text,
-    String language,
-  );
+    String language, {
+    AudioOptions? options,
+  }) async {
+    return await _circuitBreaker.execute(() async {
+      final response = await _httpClient.post('/api/v2/audio/pronunciation', data: {
+        'text': text,
+        'language': language,
+        'voice': options?.voice,
+        'speed': options?.speed ?? 1.0,
+        'is_quran_mode': language == 'ar' && options?.isQuranMode == true,
+      });
+      
+      return AudioResponse.fromJson(response.data);
+    });
+  }
+  
+  // Quran-specific processing
+  Future<QuranResponse> processQuranVerse(
+    String arabicText,
+    QuranOptions options,
+  ) async {
+    return await _circuitBreaker.execute(() async {
+      final response = await _httpClient.post('/api/v2/quran/analyze', data: {
+        'arabic_text': arabicText,
+        'reciter': options.reciter,
+        'include_translation': options.includeTranslation,
+        'include_transliteration': options.includeTransliteration,
+        'tajweed_markers': options.includeTajweedMarkers,
+      });
+      
+      return QuranResponse.fromJson(response.data);
+    });
+  }
 }
 ```
 
@@ -333,13 +533,25 @@ graph TB
         GW[Kong API Gateway<br/>Rate Limiting & Auth]
     end
     
-    subgraph "Core Services"
+    subgraph "Core AI Services"
         TS[Text Service<br/>:3001]
         AS[AI Service<br/>:3002]
-        TRS[Translation Service<br/>:3003]
-        QS[Quran Service<br/>:3004]
-        US[User Service<br/>:3005]
-        NS[Notification Service<br/>:3006]
+        CP[Custom Prompt Engine<br/>:3003]
+        TA[Tone Analysis Service<br/>:3004]
+    end
+    
+    subgraph "Language & Communication"
+        TRS[Translation Service<br/>:3005]
+        SC[Smart Communication<br/>:3006]
+        UA[Universal Audio<br/>:3007]
+        QS[Quran Service<br/>:3008]
+    end
+    
+    subgraph "Platform Services"
+        US[User Service<br/>:3009]
+        NS[Notification Service<br/>:3010]
+        AS_SVC[Analytics Service<br/>:3011]
+        CS[Cache Service<br/>:3012]
     end
     
     subgraph "Support Services"
@@ -353,28 +565,48 @@ graph TB
         MQ[Redis Queue<br/>Background Jobs]
     end
     
-    subgraph "External APIs"
-        OAI[OpenAI API]
+    subgraph "AI & Language APIs"
+        OAI[OpenAI GPT-4]
+        GEMINI[Google Gemini]
         GT[Google Translate]
-        TTS[Speech API]
+        DEEPL[DeepL API]
+    end
+    
+    subgraph "Audio & Speech APIs"
+        GTTS[Google TTS]
+        ATTS[Arabic TTS Engine]
+        NATIVE[Platform TTS]
+        QA[Quran Audio CDN]
     end
     
     GW --> TS
     GW --> AS
+    GW --> CP
+    GW --> TA
     GW --> TRS
+    GW --> SC
     GW --> QS
     GW --> US
     
     AS --> OAI
+    AS --> GEMINI
+    CP --> OAI
+    TA --> OAI
     TRS --> GT
-    QS --> TTS
+    TRS --> DEEPL
+    SC --> OAI
+    UA --> GTTS
+    UA --> NATIVE
+    QS --> ATTS
+    QS --> QA
     
     TS --> MQ
     AS --> MQ
+    SC --> MQ
     NS --> MQ
     
     US --> AC
-    AN --> CS
+    AS_SVC --> CS
     QS --> FS
     
     style GW fill:#e8eaf6
@@ -385,34 +617,51 @@ graph TB
 
 ### **4.2 Service Specifications**
 
-#### **Text Service (Node.js + Express)**
+#### **Enhanced Text Service (Node.js + Express)**
 ```javascript
-// Text processing and analysis service
+// Advanced text processing and analysis service with context awareness
 const express = require('express');
 const app = express();
 
-// Text analysis endpoint
-app.post('/api/v1/text/analyze', async (req, res) => {
-  const { text, options } = req.body;
+// Enhanced text analysis with context
+app.post('/api/v2/text/analyze', async (req, res) => {
+  const { text, context, options } = req.body;
   
   try {
-    const analysis = await textAnalyzer.analyze(text, options);
-    const cached = await cacheService.set(
-      `analysis:${hash(text)}`,
-      analysis,
-      300 // 5 minutes TTL
+    // Multi-dimensional text analysis
+    const analysis = await Promise.all([
+      textAnalyzer.analyzeLanguage(text),
+      textAnalyzer.analyzeSentiment(text),
+      textAnalyzer.analyzeComplexity(text),
+      textAnalyzer.analyzeContext(text, context),
+      textAnalyzer.suggestFeatures(text, context)
+    ]);
+    
+    const result = {
+      language: analysis[0],
+      sentiment: analysis[1],
+      complexity: analysis[2],
+      contextAnalysis: analysis[3],
+      suggestedFeatures: analysis[4],
+      confidence: calculateOverallConfidence(analysis)
+    };
+    
+    await cacheService.set(
+      `analysis:${hash(text + JSON.stringify(context))}`,
+      result,
+      600 // 10 minutes TTL
     );
     
     res.json({
       success: true,
-      data: analysis,
+      data: result,
       metadata: {
-        cached: false,
-        processingTime: Date.now() - req.startTime
+        processingTime: Date.now() - req.startTime,
+        apiVersion: 'v2'
       }
     });
   } catch (error) {
-    logger.error('Text analysis failed', { text, error });
+    logger.error('Enhanced text analysis failed', { text, context, error });
     res.status(500).json({
       success: false,
       error: 'Analysis failed'
@@ -420,129 +669,404 @@ app.post('/api/v1/text/analyze', async (req, res) => {
   }
 });
 
-// Text enhancement endpoint
-app.post('/api/v1/text/enhance', async (req, res) => {
-  const { text, enhancement_type, custom_prompt } = req.body;
+// Universal text enhancement endpoint
+app.post('/api/v2/text/enhance', async (req, res) => {
+  const { 
+    text, 
+    enhancement_type, 
+    custom_prompt, 
+    target_tone, 
+    context,
+    ai_provider = 'openai' // Support multiple AI providers
+  } = req.body;
   
-  // Validate input
-  if (!text || text.length > 10000) {
+  // Enhanced validation
+  const validation = validateEnhancementRequest({
+    text, enhancement_type, custom_prompt, target_tone
+  });
+  
+  if (!validation.isValid) {
     return res.status(400).json({
       success: false,
-      error: 'Invalid text length'
+      error: validation.error
     });
   }
   
-  // Check cache
-  const cacheKey = `enhance:${hash(text + enhancement_type + custom_prompt)}`;
-  const cached = await cacheService.get(cacheKey);
+  // Intelligent cache key generation
+  const cacheKey = generateEnhancementCacheKey({
+    text, enhancement_type, custom_prompt, target_tone, ai_provider
+  });
   
+  // Check multi-tier cache
+  const cached = await cacheService.getFromMultiTier(cacheKey);
   if (cached) {
     return res.json({
       success: true,
       data: cached,
-      metadata: { cached: true }
+      metadata: { 
+        cached: true, 
+        cacheLevel: cached.cacheLevel,
+        apiVersion: 'v2'
+      }
     });
   }
   
-  // Queue for async processing
-  const jobId = await queueService.add('text-enhancement', {
+  // Queue for async processing with priority
+  const jobPriority = calculateJobPriority(req.user, enhancement_type);
+  const jobId = await queueService.add('text-enhancement-v2', {
     text,
     enhancement_type,
     custom_prompt,
-    userId: req.user.id
-  });
+    target_tone,
+    context,
+    ai_provider,
+    userId: req.user.id,
+    requestTime: Date.now()
+  }, { priority: jobPriority });
   
   res.json({
     success: true,
     jobId,
-    status: 'processing'
+    status: 'processing',
+    estimatedTime: calculateEstimatedProcessingTime(enhancement_type, text.length),
+    apiVersion: 'v2'
   });
+});
+
+// Text context analysis for intelligent suggestions
+app.post('/api/v2/text/context', async (req, res) => {
+  const { text, app_context, conversation_history } = req.body;
+  
+  try {
+    const contextAnalysis = await contextAnalyzer.analyze({
+      text,
+      sourceApp: app_context?.package_name,
+      inputFieldType: app_context?.input_type,
+      conversationHistory: conversation_history,
+      userPreferences: req.user.preferences
+    });
+    
+    res.json({
+      success: true,
+      data: {
+        suggestedFeatures: contextAnalysis.features,
+        contextualPrompts: contextAnalysis.prompts,
+        priorityLevel: contextAnalysis.priority,
+        confidence: contextAnalysis.confidence
+      }
+    });
+  } catch (error) {
+    logger.error('Context analysis failed', error);
+    res.status(500).json({
+      success: false,
+      error: 'Context analysis failed'
+    });
+  }
 });
 ```
 
-#### **AI Service (Node.js + OpenAI)**
+#### **Multi-AI Service (Node.js + Multiple Providers)**
 ```javascript
-// AI processing service with OpenAI integration
+// Enhanced AI processing service with multiple provider support
 const OpenAI = require('openai');
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const CircuitBreaker = require('opossum');
 
-class AIService {
-  async rewriteText(text, type, customPrompt = null) {
-    const prompts = {
-      professional: "Rewrite the following text in a professional tone while maintaining the original meaning:",
-      casual: "Rewrite the following text in a casual, friendly tone:",
-      formal: "Rewrite the following text in a formal, academic tone:",
-      custom: customPrompt
-    };
+class MultiAIService {
+  constructor() {
+    // Initialize AI providers
+    this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    this.gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     
-    const prompt = prompts[type] || prompts.professional;
+    // Circuit breakers for each provider
+    this.openaiBreaker = new CircuitBreaker(this.callOpenAI.bind(this), {
+      timeout: 10000,
+      errorThresholdPercentage: 50,
+      resetTimeout: 30000
+    });
+    
+    this.geminiBreaker = new CircuitBreaker(this.callGemini.bind(this), {
+      timeout: 10000,
+      errorThresholdPercentage: 50,
+      resetTimeout: 30000
+    });
+    
+    // Advanced prompt templates
+    this.promptTemplates = {
+      professional: {
+        system: "You are a professional writing assistant specializing in business communication.",
+        user: "Rewrite the following text in a professional tone while maintaining clarity and original meaning. Focus on formal language, proper structure, and business-appropriate terminology:\n\nOriginal: {text}"
+      },
+      casual: {
+        system: "You are a friendly writing assistant that helps make text more conversational and approachable.",
+        user: "Rewrite the following text in a casual, friendly tone while keeping the core message intact. Use conversational language and a warm approach:\n\nOriginal: {text}"
+      },
+      empathetic: {
+        system: "You are a communication expert specializing in empathetic and emotionally intelligent writing.",
+        user: "Rewrite the following text with an empathetic tone, showing understanding and emotional awareness:\n\nOriginal: {text}"
+      },
+      concise: {
+        system: "You are an expert in concise communication, specializing in clear and brief writing.",
+        user: "Rewrite the following text to be more concise while preserving all important information:\n\nOriginal: {text}"
+      },
+      custom: {
+        system: "You are a versatile writing assistant that follows specific user instructions precisely.",
+        user: "{customPrompt}\n\nOriginal text: {text}"
+      }
+    };
+  }
+  
+  async enhanceText(text, options) {
+    const { type, customPrompt, targetTone, provider = 'auto', context } = options;
     
     try {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4",
-        messages: [
-          {
-            role: "system",
-            content: "You are a professional writing assistant. Provide clear, concise rewrites that improve the text while maintaining its original intent."
-          },
-          {
-            role: "user",
-            content: `${prompt}\n\nOriginal text: "${text}"`
-          }
-        ],
-        max_tokens: 1000,
-        temperature: 0.7
+      // Choose optimal AI provider based on task and availability
+      const selectedProvider = await this.selectOptimalProvider(provider, type, text.length);
+      
+      // Generate enhanced text
+      const enhancement = await this.processWithProvider(selectedProvider, {
+        text,
+        type,
+        customPrompt,
+        targetTone,
+        context
+      });
+      
+      // Generate alternatives using different strategies
+      const alternatives = await this.generateAlternatives(text, {
+        type,
+        customPrompt,
+        targetTone,
+        excludeProvider: selectedProvider
       });
       
       return {
         original: text,
-        rewritten: completion.choices[0].message.content.trim(),
+        enhanced: enhancement.text,
         type,
-        confidence: 0.95,
-        alternatives: await this.generateAlternatives(text, type)
+        provider: selectedProvider,
+        confidence: enhancement.confidence,
+        alternatives,
+        metadata: {
+          processingTime: enhancement.processingTime,
+          modelUsed: enhancement.model,
+          tokensUsed: enhancement.tokensUsed
+        }
       };
     } catch (error) {
-      logger.error('OpenAI API error', { text, type, error });
-      throw new Error('AI processing failed');
+      logger.error('AI enhancement failed', { text, options, error });
+      
+      // Fallback to cached results or simpler processing
+      return await this.handleEnhancementFailure(text, options, error);
     }
   }
   
-  async generateAlternatives(text, type) {
-    // Generate 2-3 alternative rewrites
-    const alternatives = [];
+  async processWithProvider(provider, options) {
+    const startTime = Date.now();
     
-    for (let i = 0; i < 2; i++) {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "user",
-            content: `Provide an alternative ${type} rewrite of: "${text}"`
-          }
-        ],
-        max_tokens: 500,
-        temperature: 0.8 + (i * 0.1)
-      });
+    switch (provider) {
+      case 'openai':
+        return await this.openaiBreaker.fire(options);
+      case 'gemini':
+        return await this.geminiBreaker.fire(options);
+      default:
+        throw new Error(`Unsupported AI provider: ${provider}`);
+    }
+  }
+  
+  async callOpenAI(options) {
+    const { text, type, customPrompt, targetTone, context } = options;
+    const template = this.promptTemplates[type] || this.promptTemplates.custom;
+    
+    const messages = [
+      {
+        role: "system",
+        content: template.system + (context ? ` Context: ${JSON.stringify(context)}` : '')
+      },
+      {
+        role: "user",
+        content: template.user
+          .replace('{text}', text)
+          .replace('{customPrompt}', customPrompt || '')
+      }
+    ];
+    
+    if (targetTone) {
+      messages[1].content += `\n\nTarget tone: ${targetTone}`;
+    }
+    
+    const completion = await this.openai.chat.completions.create({
+      model: "gpt-4",
+      messages,
+      max_tokens: Math.min(2000, text.length * 2),
+      temperature: type === 'creative' ? 0.8 : 0.7,
+      presence_penalty: 0.1,
+      frequency_penalty: 0.1
+    });
+    
+    return {
+      text: completion.choices[0].message.content.trim(),
+      confidence: 0.95,
+      model: 'gpt-4',
+      tokensUsed: completion.usage.total_tokens,
+      processingTime: Date.now() - this.startTime
+    };
+  }
+  
+  async callGemini(options) {
+    const { text, type, customPrompt, targetTone } = options;
+    const model = this.gemini.getGenerativeModel({ model: "gemini-1.5-pro" });
+    
+    const template = this.promptTemplates[type] || this.promptTemplates.custom;
+    const prompt = template.user
+      .replace('{text}', text)
+      .replace('{customPrompt}', customPrompt || '')
+      + (targetTone ? `\n\nTarget tone: ${targetTone}` : '');
+    
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    
+    return {
+      text: response.text().trim(),
+      confidence: 0.93,
+      model: 'gemini-1.5-pro',
+      tokensUsed: response.usageMetadata?.totalTokenCount || 0,
+      processingTime: Date.now() - this.startTime
+    };
+  }
+  
+  async selectOptimalProvider(preferredProvider, taskType, textLength) {
+    if (preferredProvider !== 'auto') {
+      return preferredProvider;
+    }
+    
+    // Provider selection logic based on task type and system status
+    const providerStatus = await this.checkProviderStatus();
+    
+    // OpenAI is generally better for complex rewriting and custom prompts
+    if (['professional', 'custom', 'empathetic'].includes(taskType) && providerStatus.openai.healthy) {
+      return 'openai';
+    }
+    
+    // Gemini is competitive for translation and simpler tasks
+    if (['casual', 'concise'].includes(taskType) && providerStatus.gemini.healthy) {
+      return 'gemini';
+    }
+    
+    // Fallback to any available provider
+    return providerStatus.openai.healthy ? 'openai' : 'gemini';
+  }
+  
+  async generateAlternatives(text, options) {
+    const alternatives = [];
+    const { type, excludeProvider } = options;
+    
+    try {
+      // Generate alternatives using different approaches
+      const alternativeStrategies = [
+        { provider: excludeProvider === 'openai' ? 'gemini' : 'openai', temperature: 0.8 },
+        { provider: excludeProvider === 'openai' ? 'gemini' : 'openai', temperature: 0.9 }
+      ];
       
-      alternatives.push(completion.choices[0].message.content.trim());
+      for (const strategy of alternativeStrategies) {
+        try {
+          const alternative = await this.processWithProvider(strategy.provider, {
+            ...options,
+            text,
+            type
+          });
+          alternatives.push(alternative.text);
+        } catch (error) {
+          logger.warn('Alternative generation failed', { strategy, error });
+        }
+      }
+    } catch (error) {
+      logger.error('Alternatives generation failed', error);
     }
     
     return alternatives;
   }
+  
+  async checkProviderStatus() {
+    return {
+      openai: {
+        healthy: !this.openaiBreaker.opened,
+        latency: await this.measureProviderLatency('openai')
+      },
+      gemini: {
+        healthy: !this.geminiBreaker.opened,
+        latency: await this.measureProviderLatency('gemini')
+      }
+    };
+  }
+  
+  async handleEnhancementFailure(text, options, error) {
+    // Try to get cached result as fallback
+    const cacheKey = `fallback:${hash(text + JSON.stringify(options))}`;
+    const cached = await cacheService.get(cacheKey);
+    
+    if (cached) {
+      return { ...cached, fromCache: true, error: error.message };
+    }
+    
+    // Return basic enhancement as last resort
+    return {
+      original: text,
+      enhanced: text, // No change
+      type: options.type,
+      provider: 'fallback',
+      confidence: 0.0,
+      alternatives: [],
+      error: error.message
+    };
+  }
 }
 ```
 
-#### **Translation Service (Node.js + Google Translate)**
+#### **Enhanced Translation Service (Node.js + Multiple Providers)**
 ```javascript
-// Translation service with language detection
+// Advanced translation service with multiple providers and context awareness
 const { Translate } = require('@google-cloud/translate').v2;
-const translate = new Translate({ projectId: process.env.GOOGLE_PROJECT_ID });
+const deepl = require('deepl-node');
+const CircuitBreaker = require('opossum');
 
-class TranslationService {
-  async detectAndTranslate(text, targetLanguage = 'en') {
+class EnhancedTranslationService {
+  constructor() {
+    this.googleTranslate = new Translate({ projectId: process.env.GOOGLE_PROJECT_ID });
+    this.deepLTranslator = new deepl.Translator(process.env.DEEPL_API_KEY);
+    
+    // Circuit breakers for each provider
+    this.googleBreaker = new CircuitBreaker(this.translateWithGoogle.bind(this), {
+      timeout: 8000,
+      errorThresholdPercentage: 40,
+      resetTimeout: 30000
+    });
+    
+    this.deeplBreaker = new CircuitBreaker(this.translateWithDeepL.bind(this), {
+      timeout: 8000,
+      errorThresholdPercentage: 40,
+      resetTimeout: 30000
+    });
+    
+    // Language pair quality mapping
+    this.providerQuality = {
+      'deepl': ['en', 'de', 'fr', 'es', 'it', 'pt', 'ru', 'zh', 'ja'],
+      'google': '*' // Google supports more languages
+    };
+  }
+  
+  async detectAndTranslate(text, options = {}) {
+    const { 
+      targetLanguage = 'en', 
+      includeAlternatives = true,
+      includePronunciation = false,
+      context = null,
+      preferredProvider = 'auto'
+    } = options;
+    
     try {
-      // Detect source language
-      const [detection] = await translate.detect(text);
+      // Enhanced language detection with context
+      const detection = await this.detectLanguageWithContext(text, context);
       const sourceLanguage = detection.language;
       
       // Skip translation if already in target language
@@ -552,44 +1076,514 @@ class TranslationService {
           translated: text,
           sourceLanguage,
           targetLanguage,
-          confidence: detection.confidence
+          confidence: detection.confidence,
+          provider: 'none',
+          alternatives: []
         };
       }
       
-      // Perform translation
-      const [translation] = await translate.translate(text, {
-        from: sourceLanguage,
-        to: targetLanguage,
-        format: 'text'
+      // Select optimal provider based on language pair and quality
+      const provider = this.selectOptimalProvider(
+        sourceLanguage, 
+        targetLanguage, 
+        preferredProvider
+      );
+      
+      // Perform translation with selected provider
+      const translation = await this.translateWithProvider(provider, {
+        text,
+        sourceLanguage,
+        targetLanguage,
+        context
       });
+      
+      // Generate alternatives if requested
+      const alternatives = includeAlternatives 
+        ? await this.generateTranslationAlternatives(text, sourceLanguage, targetLanguage, provider)
+        : [];
+      
+      // Generate pronunciation if requested
+      const pronunciation = includePronunciation
+        ? await this.generatePronunciation(translation.text, targetLanguage)
+        : null;
       
       return {
         original: text,
-        translated: translation,
+        translated: translation.text,
         sourceLanguage,
         targetLanguage,
-        confidence: detection.confidence,
-        alternatives: await this.getAlternativeTranslations(text, sourceLanguage, targetLanguage)
+        confidence: Math.min(detection.confidence, translation.confidence),
+        provider: translation.provider,
+        alternatives,
+        pronunciation,
+        metadata: {
+          processingTime: Date.now() - this.startTime,
+          contextUsed: context !== null,
+          qualityScore: translation.qualityScore
+        }
       };
     } catch (error) {
-      logger.error('Translation failed', { text, targetLanguage, error });
-      throw new Error('Translation service unavailable');
+      logger.error('Enhanced translation failed', { text, options, error });
+      return await this.handleTranslationFailure(text, options, error);
     }
   }
   
-  async getAlternativeTranslations(text, source, target) {
-    // Get alternative translations using different models/approaches
+  async translateWithProvider(provider, options) {
+    const { text, sourceLanguage, targetLanguage, context } = options;
+    
+    switch (provider) {
+      case 'deepl':
+        return await this.deeplBreaker.fire(text, sourceLanguage, targetLanguage, context);
+      case 'google':
+        return await this.googleBreaker.fire(text, sourceLanguage, targetLanguage, context);
+      default:
+        throw new Error(`Unsupported translation provider: ${provider}`);
+    }
+  }
+  
+  async translateWithDeepL(text, sourceLanguage, targetLanguage, context) {
     try {
-      const alternatives = await translate.translate(text, {
-        from: source,
-        to: target,
-        model: 'base'
+      // DeepL with context enhancement
+      const enhancedText = context ? this.enhanceTextWithContext(text, context) : text;
+      
+      const result = await this.deepLTranslator.translateText(
+        enhancedText,
+        sourceLanguage,
+        targetLanguage,
+        {
+          preserveFormatting: true,
+          formality: context?.tone === 'formal' ? 'more' : 'default'
+        }
+      );
+      
+      return {
+        text: result.text,
+        confidence: 0.95, // DeepL generally high quality
+        provider: 'deepl',
+        qualityScore: this.calculateQualityScore(text, result.text, 'deepl')
+      };
+    } catch (error) {
+      logger.error('DeepL translation failed', { text, sourceLanguage, targetLanguage, error });
+      throw error;
+    }
+  }
+  
+  async translateWithGoogle(text, sourceLanguage, targetLanguage, context) {
+    try {
+      const [translation] = await this.googleTranslate.translate(text, {
+        from: sourceLanguage,
+        to: targetLanguage,
+        format: 'text',
+        model: 'nmt' // Neural Machine Translation
       });
       
-      return alternatives.slice(0, 2); // Return up to 2 alternatives
+      return {
+        text: translation,
+        confidence: 0.88,
+        provider: 'google',
+        qualityScore: this.calculateQualityScore(text, translation, 'google')
+      };
     } catch (error) {
-      return []; // Return empty array if alternatives fail
+      logger.error('Google translation failed', { text, sourceLanguage, targetLanguage, error });
+      throw error;
     }
+  }
+  
+  async detectLanguageWithContext(text, context) {
+    // Enhanced language detection using multiple signals
+    const [basicDetection] = await this.googleTranslate.detect(text);
+    
+    // Use context to improve detection confidence
+    if (context?.sourceApp) {
+      const appLanguageHints = this.getLanguageHintsFromApp(context.sourceApp);
+      if (appLanguageHints.includes(basicDetection.language)) {
+        basicDetection.confidence = Math.min(basicDetection.confidence + 0.1, 1.0);
+      }
+    }
+    
+    return basicDetection;
+  }
+  
+  selectOptimalProvider(sourceLanguage, targetLanguage, preferred) {
+    if (preferred !== 'auto') {
+      return preferred;
+    }
+    
+    // Check if DeepL supports this language pair and is available
+    const deeplSupports = this.providerQuality.deepl.includes(sourceLanguage) && 
+                         this.providerQuality.deepl.includes(targetLanguage);
+    
+    if (deeplSupports && !this.deeplBreaker.opened) {
+      return 'deepl'; // Prefer DeepL for supported languages
+    }
+    
+    return 'google'; // Fallback to Google for broader language support
+  }
+  
+  async generateTranslationAlternatives(text, sourceLanguage, targetLanguage, excludeProvider) {
+    const alternatives = [];
+    
+    try {
+      // Use the other provider for alternatives
+      const alternativeProvider = excludeProvider === 'deepl' ? 'google' : 'deepl';
+      
+      // Only generate if the alternative provider supports the language pair
+      if (this.canProviderHandle(alternativeProvider, sourceLanguage, targetLanguage)) {
+        const alternative = await this.translateWithProvider(alternativeProvider, {
+          text,
+          sourceLanguage,
+          targetLanguage,
+          context: null
+        });
+        
+        alternatives.push({
+          text: alternative.text,
+          provider: alternative.provider,
+          confidence: alternative.confidence
+        });
+      }
+      
+      // Generate style variations with the same provider
+      if (excludeProvider === 'deepl') {
+        try {
+          const formalVersion = await this.deepLTranslator.translateText(
+            text,
+            sourceLanguage,
+            targetLanguage,
+            { formality: 'more' }
+          );
+          
+          if (formalVersion.text !== alternatives[0]?.text) {
+            alternatives.push({
+              text: formalVersion.text,
+              provider: 'deepl-formal',
+              confidence: 0.93
+            });
+          }
+        } catch (error) {
+          logger.warn('Formal alternative generation failed', error);
+        }
+      }
+    } catch (error) {
+      logger.warn('Translation alternatives generation failed', error);
+    }
+    
+    return alternatives;
+  }
+  
+  async generatePronunciation(text, language) {
+    try {
+      // This would integrate with TTS services for pronunciation
+      return {
+        phonetic: await this.generatePhoneticTranscription(text, language),
+        audioUrl: await this.generatePronunciationAudio(text, language)
+      };
+    } catch (error) {
+      logger.warn('Pronunciation generation failed', error);
+      return null;
+    }
+  }
+  
+  canProviderHandle(provider, sourceLanguage, targetLanguage) {
+    if (provider === 'google') return true; // Google supports most languages
+    
+    return this.providerQuality[provider]?.includes(sourceLanguage) &&
+           this.providerQuality[provider]?.includes(targetLanguage);
+  }
+  
+  calculateQualityScore(originalText, translatedText, provider) {
+    // Simple quality heuristics (could be enhanced with ML models)
+    const lengthRatio = translatedText.length / originalText.length;
+    const providerBonus = provider === 'deepl' ? 0.1 : 0.0;
+    
+    let score = 0.8; // Base score
+    
+    // Reasonable length ratio indicates good translation
+    if (lengthRatio >= 0.5 && lengthRatio <= 2.0) {
+      score += 0.1;
+    }
+    
+    // Provider quality bonus
+    score += providerBonus;
+    
+    return Math.min(score, 1.0);
+  }
+  
+  async handleTranslationFailure(text, options, error) {
+    // Try to get cached result as fallback
+    const cacheKey = `translation_fallback:${hash(text + options.targetLanguage)}`;
+    const cached = await cacheService.get(cacheKey);
+    
+    if (cached) {
+      return { ...cached, fromCache: true, error: error.message };
+    }
+    
+    // Return untranslated text as last resort
+    return {
+      original: text,
+      translated: text,
+      sourceLanguage: 'unknown',
+      targetLanguage: options.targetLanguage,
+      confidence: 0.0,
+      provider: 'fallback',
+      alternatives: [],
+      error: error.message
+    };
+  }
+}
+```
+
+#### **Smart Communication Service (Node.js + AI)**
+```javascript
+// Service for intelligent conversation analysis and smart replies
+class SmartCommunicationService {
+  constructor() {
+    this.aiService = new MultiAIService();
+    this.conversationAnalyzer = new ConversationAnalyzer();
+    this.toneAnalyzer = new ToneAnalyzer();
+  }
+  
+  async generateSmartReplies(conversationHistory, options = {}) {
+    const {
+      replyStyle = 'balanced',
+      maxSuggestions = 3,
+      userPreferences = {},
+      context = {}
+    } = options;
+    
+    try {
+      // Analyze conversation context
+      const analysis = await this.conversationAnalyzer.analyze({
+        messages: conversationHistory,
+        context,
+        userPreferences
+      });
+      
+      // Generate contextually appropriate replies
+      const replies = await this.generateContextualReplies({
+        analysis,
+        replyStyle,
+        maxSuggestions
+      });
+      
+      return {
+        suggestions: replies,
+        conversationTone: analysis.tone,
+        confidence: analysis.confidence,
+        metadata: {
+          analysisType: analysis.type,
+          contextFactors: analysis.factors
+        }
+      };
+    } catch (error) {
+      logger.error('Smart reply generation failed', { conversationHistory, options, error });
+      return this.getFallbackReplies(replyStyle);
+    }
+  }
+  
+  async analyzeTone(text, options = {}) {
+    const {
+      includeAdjustmentSuggestions = true,
+      targetAudience = 'general',
+      context = {}
+    } = options;
+    
+    try {
+      const analysis = await this.toneAnalyzer.analyze({
+        text,
+        targetAudience,
+        context
+      });
+      
+      const result = {
+        detectedTone: analysis.primary_tone,
+        confidence: analysis.confidence,
+        emotionalIndicators: analysis.emotions,
+        formalityLevel: analysis.formality,
+        sentimentScore: analysis.sentiment
+      };
+      
+      if (includeAdjustmentSuggestions) {
+        result.adjustmentSuggestions = await this.generateToneAdjustments(text, analysis);
+      }
+      
+      return result;
+    } catch (error) {
+      logger.error('Tone analysis failed', { text, options, error });
+      throw error;
+    }
+  }
+  
+  async adjustTone(text, targetTone, options = {}) {
+    const {
+      preserveMeaning = true,
+      adjustmentLevel = 'moderate',
+      context = {}
+    } = options;
+    
+    try {
+      const prompt = this.buildToneAdjustmentPrompt({
+        text,
+        targetTone,
+        preserveMeaning,
+        adjustmentLevel,
+        context
+      });
+      
+      const adjustment = await this.aiService.enhanceText(text, {
+        type: 'custom',
+        customPrompt: prompt,
+        provider: 'openai' // OpenAI better for nuanced tone work
+      });
+      
+      // Validate tone adjustment
+      const validation = await this.validateToneAdjustment(
+        text,
+        adjustment.enhanced,
+        targetTone
+      );
+      
+      return {
+        original: text,
+        adjusted: adjustment.enhanced,
+        targetTone,
+        actualTone: validation.achievedTone,
+        adjustmentSuccess: validation.success,
+        confidence: validation.confidence,
+        alternatives: adjustment.alternatives
+      };
+    } catch (error) {
+      logger.error('Tone adjustment failed', { text, targetTone, options, error });
+      throw error;
+    }
+  }
+}
+```
+
+#### **Universal Audio Service (Node.js + Multiple TTS)**
+```javascript
+// Service for universal text-to-speech and audio processing
+class UniversalAudioService {
+  constructor() {
+    this.googleTTS = new TextToSpeechClient();
+    this.arabicTTSEngine = new ArabicTTSEngine();
+    this.platformTTS = new PlatformTTSAdapter();
+    this.quranAudioService = new QuranAudioService();
+  }
+  
+  async generateAudio(text, options = {}) {
+    const {
+      language = 'en',
+      voice = 'default',
+      speed = 1.0,
+      pitch = 0.0,
+      isQuranMode = false,
+      outputFormat = 'mp3',
+      quality = 'standard'
+    } = options;
+    
+    try {
+      // Route to appropriate TTS engine based on requirements
+      let audioResult;
+      
+      if (isQuranMode && language === 'ar') {
+        audioResult = await this.generateQuranAudio(text, options);
+      } else if (language === 'ar') {
+        audioResult = await this.generateArabicAudio(text, options);
+      } else {
+        audioResult = await this.generateStandardAudio(text, options);
+      }
+      
+      // Post-process audio if needed
+      if (options.enhanceAudio) {
+        audioResult = await this.enhanceAudioQuality(audioResult, options);
+      }
+      
+      return {
+        audioUrl: audioResult.url,
+        duration: audioResult.duration,
+        language,
+        voice: audioResult.voice,
+        metadata: {
+          engine: audioResult.engine,
+          quality,
+          fileSize: audioResult.fileSize,
+          processingTime: audioResult.processingTime
+        }
+      };
+    } catch (error) {
+      logger.error('Audio generation failed', { text, options, error });
+      throw error;
+    }
+  }
+  
+  async generateQuranAudio(arabicText, options) {
+    const {
+      reciter = 'mishary',
+      tajweedLevel = 'standard',
+      includeMarkers = true
+    } = options;
+    
+    // Attempt to identify specific Quran verse
+    const verseInfo = await this.quranAudioService.identifyVerse(arabicText);
+    
+    if (verseInfo.found) {
+      // Use pre-recorded high-quality recitation
+      const audioUrl = await this.quranAudioService.getVerseAudio(
+        verseInfo.surah,
+        verseInfo.verse,
+        reciter
+      );
+      
+      const markers = includeMarkers 
+        ? await this.quranAudioService.getTajweedMarkers(verseInfo.surah, verseInfo.verse)
+        : null;
+      
+      return {
+        url: audioUrl,
+        duration: verseInfo.duration,
+        voice: reciter,
+        engine: 'quran-audio-cdn',
+        tajweedMarkers: markers,
+        verseInfo
+      };
+    } else {
+      // Generate using specialized Arabic TTS with Tajweed rules
+      return await this.arabicTTSEngine.generateWithTajweed(arabicText, {
+        reciterStyle: reciter,
+        tajweedLevel,
+        includeMarkers
+      });
+    }
+  }
+  
+  async generateReadAloudAudio(text, options) {
+    const {
+      language,
+      voice,
+      speed = 1.0,
+      highlightWords = true,
+      backgroundPlayback = true
+    } = options;
+    
+    // Generate audio with word-level timing for highlighting
+    const audioResult = await this.generateStandardAudio(text, {
+      ...options,
+      includeWordTimings: highlightWords
+    });
+    
+    if (highlightWords) {
+      audioResult.wordTimings = await this.generateWordTimings(text, audioResult.duration);
+    }
+    
+    return {
+      ...audioResult,
+      readAloudOptions: {
+        highlightWords,
+        backgroundPlayback,
+        wordTimings: audioResult.wordTimings
+      }
+    };
   }
 }
 ```
@@ -698,7 +1692,11 @@ erDiagram
         string enhancedText
         string enhancementType
         string customPrompt
+        string targetTone
+        string aiProvider
         float confidence
+        json alternatives
+        json metadata
         datetime createdAt
         datetime expiresAt
     }
@@ -710,7 +1708,61 @@ erDiagram
         string translatedText
         string sourceLanguage
         string targetLanguage
+        string provider
         float confidence
+        json alternatives
+        json pronunciation
+        json context
+        datetime createdAt
+    }
+    
+    ConversationContext {
+        string id PK
+        string userId FK
+        string sourceApp
+        string inputFieldType
+        json messageHistory
+        json contextMetadata
+        datetime lastUpdated
+        datetime expiresAt
+    }
+    
+    ToneAnalysis {
+        string id PK
+        string userId FK
+        string originalText
+        string detectedTone
+        float confidence
+        json emotionalIndicators
+        float formalityLevel
+        float sentimentScore
+        json adjustmentSuggestions
+        datetime createdAt
+    }
+    
+    SmartReply {
+        string id PK
+        string userId FK
+        string conversationId FK
+        json replyOptions
+        string selectedReply
+        string replyStyle
+        float relevanceScore
+        datetime createdAt
+    }
+    
+    AudioFile {
+        string id PK
+        string userId FK
+        string originalText
+        string language
+        string voice
+        string audioUrl
+        int duration
+        string engine
+        boolean isQuranMode
+        json tajweedMarkers
+        json metadata
         datetime createdAt
     }
     
@@ -730,6 +1782,10 @@ erDiagram
         string email
         string preferredLanguage
         json preferences
+        json aiPreferences
+        json communicationStyle
+        json languageSettings
+        json accessibilitySettings
         datetime createdAt
         datetime lastActiveAt
         boolean isActive
@@ -737,8 +1793,20 @@ erDiagram
     
     Preference {
         string userId FK
+        string category
         string key
         json value
+        boolean isSystemGenerated
+        datetime updatedAt
+    }
+    
+    UserUsagePattern {
+        string id PK
+        string userId FK
+        string featureType
+        json usageData
+        json behaviorMetrics
+        datetime analyzedAt
         datetime updatedAt
     }
     
@@ -1878,25 +2946,45 @@ sequenceDiagram
 
 | Layer | Technology | Version | Purpose | Alternatives Considered |
 |-------|------------|---------|---------|------------------------|
-| **Mobile App** | Flutter | 3.16+ | Cross-platform mobile development | React Native, Native iOS/Android |
+| **Mobile Framework** | Flutter | 3.16+ | Cross-platform mobile development | React Native, Native iOS/Android |
 | **State Management** | BLoC | 8.1+ | Reactive state management | Provider, Riverpod, GetX |
-| **Local Database** | SQLite + Hive | Latest | Offline data storage | Realm, ObjectBox |
-| **HTTP Client** | Dio | 5.3+ | API communication | http package, Chopper |
-| **Dependency Injection** | GetIt | 7.6+ | Service location | Provider, Riverpod |
-| **Backend Runtime** | Node.js | 18 LTS | Server-side JavaScript | Python, Go, Java |
-| **Web Framework** | Express.js | 4.18+ | RESTful API development | Fastify, Koa.js |
-| **API Gateway** | Kong | 3.4+ | API management | AWS API Gateway, Nginx |
-| **Database** | PostgreSQL | 15+ | Primary data storage | MongoDB, MySQL |
-| **Cache** | Redis | 7.0+ | In-memory caching | Memcached, Hazelcast |
-| **Message Queue** | Redis Queue | 4.0+ | Background job processing | RabbitMQ, Apache Kafka |
-| **Object Storage** | AWS S3 | - | File storage | Google Cloud Storage, Azure Blob |
-| **CDN** | CloudFlare | - | Global content delivery | AWS CloudFront, Azure CDN |
+| **Local Storage** | SQLite + Hive | Latest | Offline data storage | Realm, ObjectBox |
+| **HTTP Client** | Dio | 5.3+ | API communication with interceptors | http package, Chopper |
+| **Dependency Injection** | GetIt | 7.6+ | Service location and DI | Provider, Riverpod |
+| **Cache Management** | flutter_cache_manager | 3.3+ | Local file and data caching | Custom cache implementation |
+| **Platform Integration** | flutter_accessibility_service | Custom | Android accessibility integration | Platform channels |
+| **Backend Runtime** | Node.js | 18 LTS | Server-side JavaScript runtime | Python FastAPI, Go, Java Spring |
+| **Web Framework** | Express.js | 4.18+ | RESTful API development | Fastify, Koa.js, NestJS |
+| **API Gateway** | Kong | 3.4+ | Advanced API management & routing | AWS API Gateway, Nginx, Envoy |
+| **Primary Database** | PostgreSQL | 15+ | ACID-compliant data storage | MongoDB, MySQL, CockroachDB |
+| **Cache Layer** | Redis | 7.0+ | Multi-tier in-memory caching | Memcached, Hazelcast, KeyDB |
+| **Message Queue** | Redis Queue | 4.0+ | Background job processing | RabbitMQ, Apache Kafka, AWS SQS |
+| **Circuit Breaker** | Opossum | 6.3+ | Fault tolerance for external APIs | Hystrix, resilience4j |
+| **AI Services** | OpenAI GPT-4 | Latest | Primary text enhancement AI | Anthropic Claude, Cohere |
+| **AI Services** | Google Gemini | 1.5-Pro | Alternative AI provider | OpenAI GPT-3.5, PaLM 2 |
+| **Translation** | Google Translate API | v2 | Multi-language translation | AWS Translate, Azure Translator |
+| **Translation Pro** | DeepL API | Latest | High-quality professional translation | Google Translate Advanced |
+| **TTS Services** | Google Text-to-Speech | Latest | Multi-language voice synthesis | AWS Polly, Azure Cognitive Services |
+| **Arabic TTS** | Custom Arabic Engine | 1.0 | Tajweed-compliant pronunciation | Specialized Arabic TTS providers |
+| **Platform TTS** | Native Engines | System | Device-native voice synthesis | Third-party TTS only |
+| **Object Storage** | AWS S3 | - | Audio files and static assets | Google Cloud Storage, Azure Blob |
+| **CDN** | CloudFlare | Pro | Global content delivery with edge | AWS CloudFront, Azure CDN |
+| **Audio CDN** | Specialized CDN | - | Optimized audio file delivery | Standard CDN with audio optimization |
 | **Container** | Docker | 24+ | Application containerization | Podman, containerd |
-| **Orchestration** | Kubernetes | 1.28+ | Container orchestration | Docker Swarm, ECS |
-| **CI/CD** | GitHub Actions | - | Automated deployment | GitLab CI, Jenkins |
-| **Monitoring** | DataDog | - | Application monitoring | New Relic, Grafana |
-| **Error Tracking** | Sentry | - | Error monitoring | Bugsnag, Rollbar |
-| **Analytics** | Mixpanel | - | User behavior analytics | Google Analytics, Amplitude |
+| **Orchestration** | Kubernetes | 1.28+ | Container orchestration | Docker Swarm, AWS ECS, Google GKE |
+| **Service Mesh** | Istio | 1.19+ | Microservices communication | Linkerd, Consul Connect |
+| **CI/CD** | GitHub Actions | - | Automated testing and deployment | GitLab CI, Jenkins, CircleCI |
+| **Infrastructure** | Terraform | 1.6+ | Infrastructure as Code | AWS CloudFormation, Pulumi |
+| **Monitoring** | Prometheus + Grafana | Latest | Metrics collection and visualization | DataDog, New Relic |
+| **Logging** | ELK Stack | 8.10+ | Centralized logging and analysis | Splunk, Fluentd + ClickHouse |
+| **Tracing** | Jaeger + OpenTelemetry | Latest | Distributed tracing | Zipkin, AWS X-Ray |
+| **Error Tracking** | Sentry | Latest | Error monitoring and alerting | Bugsnag, Rollbar, Crashlytics |
+| **Mobile Crashes** | Firebase Crashlytics | Latest | Mobile-specific crash reporting | Sentry Mobile, Bugsnag |
+| **Analytics** | Mixpanel | Latest | User behavior analytics | Google Analytics 4, Amplitude |
+| **Business Intelligence** | Custom Metrics | - | AI quality and performance tracking | Third-party BI tools |
+| **Security** | HashiCorp Vault | 1.15+ | Secrets management | AWS Secrets Manager, Azure Key Vault |
+| **Load Balancing** | Nginx | 1.24+ | Application load balancing | HAProxy, AWS ALB |
+| **Reverse Proxy** | Nginx | 1.24+ | SSL termination and routing | Traefik, Envoy Proxy |
 
 ### **11.2 Development Tools**
 
@@ -2548,6 +3636,26 @@ class BusinessMetricsCollector {
 
 ---
 
-This comprehensive system architecture document provides a detailed blueprint for implementing the Promptly application. The architecture is designed to be scalable, maintainable, and performance-optimized while ensuring security and reliability.
+This comprehensive system architecture document provides a detailed blueprint for implementing the enhanced Promptly application with all advanced features from the updated PRD. The architecture supports:
 
-The modular design allows for incremental implementation and provides clear separation of concerns across different system components. Each architectural decision is backed by clear rationale and includes mitigation strategies for potential risks.
+**Core Enhancements:**
+- Multi-AI provider integration (OpenAI GPT-4, Google Gemini)
+- Advanced translation services (Google Translate, DeepL)
+- Smart communication features (tone analysis, contextual replies)
+- Universal audio processing (TTS, Tajweed-compliant Arabic pronunciation)
+- Custom prompting engine with user-defined instructions
+- System-level text selection across all mobile applications
+
+**Platform Integration:**
+- Enhanced Android accessibility services for comprehensive text detection
+- Advanced iOS share extensions and keyboard integration
+- Cross-platform privacy and security compliance
+- Native performance optimizations for each platform
+
+**Scalability & Performance:**
+- Multi-tier caching strategy (memory, Redis, database)
+- Circuit breaker patterns for external API reliability
+- Intelligent load balancing and auto-scaling
+- Advanced monitoring and observability
+
+The modular design allows for incremental implementation and provides clear separation of concerns across different system components. Each architectural decision is backed by clear rationale and includes mitigation strategies for potential risks. The enhanced architecture ensures enterprise-grade scalability while maintaining the seamless user experience envisioned in the updated product requirements.

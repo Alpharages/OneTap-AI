@@ -1,8 +1,9 @@
 # User Stories Document
 ## Promptly - AI-Powered Mobile Text Enhancement App
 
-**Document Version:** 1.0  
+**Document Version:** 2.0  
 **Date:** December 2024  
+**Last Updated:** December 2024 - Enhanced with advanced AI features  
 **Product Manager:** [To be filled]  
 **Development Team:** [To be filled]
 
@@ -16,14 +17,17 @@
 4. [Epic 2: Professional Text Enhancement](#4-epic-2-professional-text-enhancement)
 5. [Epic 3: Real-Time Translation](#5-epic-3-real-time-translation)
 6. [Epic 4: Quran Mode & Arabic Support](#6-epic-4-quran-mode--arabic-support)
-7. [Epic 5: User Onboarding & Setup](#7-epic-5-user-onboarding--setup)
-8. [Epic 6: Performance & Reliability](#8-epic-6-performance--reliability)
-9. [Epic 7: Security & Privacy](#9-epic-7-security--privacy)
-10. [Epic 8: Analytics & Personalization](#10-epic-8-analytics--personalization)
-11. [Epic 9: Accessibility & Inclusivity](#11-epic-9-accessibility--inclusivity)
-12. [Epic 10: Platform Integration](#12-epic-10-platform-integration)
-13. [Story Mapping & Sprint Planning](#13-story-mapping--sprint-planning)
-14. [Definition of Done](#14-definition-of-done)
+7. [Epic 7: Smart Communication & Tone Analysis](#7-epic-7-smart-communication--tone-analysis)
+8. [Epic 8: Universal Audio & Read Aloud](#8-epic-8-universal-audio--read-aloud)
+9. [Epic 9: Enhanced Platform Integration](#9-epic-9-enhanced-platform-integration)
+10. [Epic 5: User Onboarding & Setup](#10-epic-5-user-onboarding--setup)
+11. [Epic 6: Performance & Reliability](#11-epic-6-performance--reliability)
+12. [Epic 10: Security & Privacy](#12-epic-10-security--privacy)
+13. [Epic 11: Analytics & Personalization](#13-epic-11-analytics--personalization)
+14. [Epic 12: Accessibility & Inclusivity](#14-epic-12-accessibility--inclusivity)
+15. [Epic 10: Legacy Platform Integration](#15-epic-10-legacy-platform-integration)
+16. [Story Mapping & Sprint Planning](#16-story-mapping--sprint-planning)
+17. [Definition of Done](#17-definition-of-done)
 
 ---
 
@@ -724,7 +728,270 @@ All user stories follow the standard format:
 
 ---
 
-## **7. Epic 5: User Onboarding & Setup**
+## **7. Epic 7: Smart Communication & Tone Analysis**
+
+**Epic Goal:** Provide intelligent conversation analysis, smart reply suggestions, and emotional tone detection/adjustment.
+
+### **Story 7.1: Conversation Context Analysis**
+**Priority:** P0 | **Business Value:** H | **Story Points:** 13
+
+**As a** professional user like Sarah  
+**I want** the app to understand my conversation context  
+**So that** I get relevant suggestions based on what I'm responding to
+
+**Acceptance Criteria:**
+- **Given** I'm writing a reply in a messaging app
+- **When** I select text and activate Promptly
+- **Then** the system analyzes recent message history for context
+- **And** it identifies the conversation topic and tone
+- **And** it suggests contextually appropriate enhancements
+- **And** it respects privacy by processing conversations locally when possible
+- **And** it provides different suggestions for different conversation types
+
+**Context Analysis Features:**
+- Recent message history analysis (last 5-10 messages)
+- Conversation topic identification
+- Participant relationship detection (formal/casual)
+- Urgency level assessment
+- Cultural context awareness
+
+---
+
+### **Story 7.2: Smart Reply Generation**
+**Priority:** P0 | **Business Value:** H | **Story Points:** 8
+
+**As a** busy professional  
+**I want** AI-generated reply suggestions based on conversation context  
+**So that** I can respond quickly with appropriate messages
+
+**Acceptance Criteria:**
+- **Given** I'm in a conversation thread
+- **When** I activate smart reply mode
+- **Then** I see 2-3 contextually relevant reply options
+- **And** each suggestion matches the conversation tone
+- **And** I can customize the formality level of suggestions
+- **And** suggestions are generated within 2 seconds
+- **And** I can quickly insert a suggestion or use it as a starting point
+
+---
+
+### **Story 7.3: Emotional Tone Detection**
+**Priority:** P1 | **Business Value:** H | **Story Points:** 8
+
+**As a** user who wants to communicate effectively  
+**I want** to understand the emotional tone of my text  
+**So that** I can ensure my message conveys the right sentiment
+
+**Acceptance Criteria:**
+- **Given** I select text I've written
+- **When** I tap "Analyze Tone"
+- **Then** I see the detected emotional tone (e.g., "Slightly Impatient", "Very Formal")
+- **And** I see a confidence score for the tone detection
+- **And** I get explanations of what linguistic cues indicate this tone
+- **And** I see how the tone might be perceived by different audiences
+- **And** I can request tone adjustment suggestions
+
+---
+
+### **Story 7.4: Tone Adjustment & Modification**
+**Priority:** P1 | **Business Value:** H | **Story Points:** 8
+
+**As a** user  
+**I want** to adjust the emotional tone of my message  
+**So that** it better matches my intended communication style
+
+**Acceptance Criteria:**
+- **Given** I have text with a detected tone
+- **When** I select a different target tone
+- **Then** the system rewrites the text to match the new tone
+- **And** the meaning remains unchanged while adjusting emotional expression
+- **And** I can preview the adjusted text before applying it
+- **And** I see explanations of what changes were made
+- **And** I can choose from multiple tone adjustment options
+
+---
+
+## **8. Epic 8: Universal Audio & Read Aloud**
+
+**Epic Goal:** Provide comprehensive audio features including text-to-speech, pronunciation guidance, and background audio playback.
+
+### **Story 8.1: General Text-to-Speech**
+**Priority:** P0 | **Business Value:** H | **Story Points:** 8
+
+**As a** user who prefers audio content  
+**I want** to listen to any text being read aloud  
+**So that** I can consume content while multitasking or to accommodate different learning preferences
+
+**Acceptance Criteria:**
+- **Given** I select any text (article, email, message)
+- **When** I tap "Read Aloud"
+- **Then** high-quality text-to-speech begins playing immediately
+- **And** I can control playback speed (0.5x to 2x)
+- **And** I can pause, resume, and skip through the text
+- **And** the text is highlighted as it's being read
+- **And** audio continues playing when I switch to other apps
+
+**Audio Features:**
+- High-quality multi-language TTS
+- Natural-sounding voices with emotional inflection
+- Background playback with notification controls
+- Word-by-word highlighting during playback
+- Audio bookmark and resume functionality
+
+---
+
+### **Story 8.2: Multi-Language Audio Support**
+**Priority:** P1 | **Business Value:** H | **Story Points:** 8
+
+**As a** multilingual user  
+**I want** high-quality text-to-speech in multiple languages  
+**So that** I can listen to content in any language I encounter
+
+**Acceptance Criteria:**
+- **Given** I select text in any supported language
+- **When** I activate read aloud
+- **Then** the system automatically detects the language
+- **And** uses the appropriate native voice for that language
+- **And** pronunciation is accurate for language-specific sounds
+- **And** I can choose from multiple voice options per language
+- **And** mixed-language text is handled appropriately
+
+**Language Support:**
+- 50+ languages with native TTS voices
+- Automatic language detection for audio
+- Regional accent variations where available
+- Gender options for voice selection
+- Language-specific pronunciation rules
+
+---
+
+### **Story 8.3: Background Audio Playback**
+**Priority:** P1 | **Business Value:** M | **Story Points:** 5
+
+**As a** multitasking user  
+**I want** audio to continue playing when I switch apps  
+**So that** I can listen while doing other tasks
+
+**Acceptance Criteria:**
+- **Given** audio is playing from Promptly
+- **When** I switch to another app or lock my phone
+- **Then** audio continues playing uninterrupted
+- **And** I see playback controls in my notification panel
+- **And** I can control playback from lock screen
+- **And** audio integrates properly with other audio apps
+- **And** I can resume from where I left off when returning to the app
+
+---
+
+### **Story 8.4: Audio Bookmarks & Navigation**
+**Priority:** P2 | **Business Value:** M | **Story Points:** 5
+
+**As a** user listening to long content  
+**I want** to bookmark important sections and navigate through audio  
+**So that** I can easily return to key information
+
+**Acceptance Criteria:**
+- **Given** I'm listening to long-form text
+- **When** I hear something important
+- **Then** I can create an audio bookmark with one tap
+- **And** I can add notes to bookmarks for context
+- **And** I can jump to any bookmark quickly
+- **And** I can see a list of all bookmarks for the current text
+- **And** bookmarks sync across devices if I'm signed in
+
+---
+
+## **9. Epic 9: Enhanced Platform Integration**
+
+**Epic Goal:** Provide deep, native-feeling integration with mobile platforms and popular applications through advanced accessibility and extension technologies.
+
+### **Story 9.1: Advanced Android Accessibility Integration**
+**Priority:** P0 | **Business Value:** H | **Story Points:** 13
+
+**As an** Android user  
+**I want** seamless text processing across all apps  
+**So that** I can access AI features without any workflow interruption
+
+**Acceptance Criteria:**
+- **Given** I'm using any Android app with text input
+- **When** I select text anywhere on the system
+- **Then** Promptly options appear in the accessibility overlay
+- **And** I can access conversation history for messaging apps
+- **And** the floating bubble interface works across all apps
+- **And** I can use custom keyboard integration for inline suggestions
+- **And** the system respects app-specific privacy settings
+
+**Advanced Android Features:**
+- **Accessibility Service**: System-wide text selection detection and conversation reading
+- **Floating Bubble**: Persistent, moveable interface for quick access
+- **Custom Keyboard**: Inline AI suggestions as you type
+- **Intent Integration**: Deep linking with popular apps
+- **Notification Access**: Smart reply suggestions for incoming messages
+
+---
+
+### **Story 9.2: Advanced iOS Extension System**
+**Priority:** P0 | **Business Value:** H | **Story Points:** 13
+
+**As an** iOS user  
+**I want** powerful text processing capabilities within iOS's security model  
+**So that** I can enhance text while maintaining iOS's privacy and security standards
+
+**Acceptance Criteria:**
+- **Given** I'm using any iOS app with text
+- **When** I select text and access the share sheet
+- **Then** Promptly provides comprehensive text processing options
+- **And** I can use Siri Shortcuts for voice-activated enhancement
+- **And** custom keyboard provides inline AI suggestions
+- **And** Universal Clipboard enables cross-device functionality
+- **And** all processing respects iOS privacy guidelines
+
+**Advanced iOS Features:**
+- **Enhanced Share Extension**: Rich text processing with preview
+- **Custom Keyboard Extension**: Real-time AI suggestions and corrections
+- **Siri Shortcuts Integration**: Voice commands for common enhancements
+- **Universal Clipboard**: Cross-device text synchronization
+- **Widget Integration**: Quick access to recent enhancements
+
+---
+
+### **Story 9.3: Conversation Context Intelligence**
+**Priority:** P1 | **Business Value:** H | **Story Points:** 8
+
+**As a** user engaged in conversations  
+**I want** AI suggestions that understand the full conversation context  
+**So that** my responses are relevant and appropriately toned
+
+**Acceptance Criteria:**
+- **Given** I'm participating in a conversation thread
+- **When** I compose a response
+- **Then** the system analyzes the conversation history
+- **And** it understands participant relationships and communication patterns
+- **And** it suggests responses that fit the conversation flow
+- **And** it maintains context across different messaging platforms
+- **And** it respects privacy by processing context securely
+
+---
+
+### **Story 9.4: Smart Keyboard Integration**
+**Priority:** P1 | **Business Value:** M | **Story Points:** 8
+
+**As a** power user who types frequently  
+**I want** AI-powered suggestions directly in my keyboard  
+**So that** I can enhance text in real-time as I type
+
+**Acceptance Criteria:**
+- **Given** I'm typing in any app using Promptly keyboard
+- **When** I type text that could be improved
+- **Then** I see inline suggestions for enhancement
+- **And** I can accept suggestions with a single tap
+- **And** the keyboard learns my writing patterns and preferences
+- **And** I can toggle between different suggestion modes
+- **And** suggestions don't significantly slow down typing
+
+---
+
+## **10. Epic 5: User Onboarding & Setup**
 
 **Epic Goal:** Provide smooth onboarding experience that gets users to value quickly.
 
@@ -1017,7 +1284,7 @@ All user stories follow the standard format:
 
 ---
 
-## **9. Epic 7: Security & Privacy**
+## **12. Epic 10: Security & Privacy**
 
 **Epic Goal:** Protect user data and privacy while maintaining transparency about data handling.
 
@@ -1127,7 +1394,7 @@ All user stories follow the standard format:
 
 ---
 
-## **10. Epic 8: Analytics & Personalization**
+## **13. Epic 11: Analytics & Personalization**
 
 **Epic Goal:** Learn from user behavior to provide increasingly personalized and valuable experiences.
 
@@ -1237,7 +1504,7 @@ All user stories follow the standard format:
 
 ---
 
-## **11. Epic 9: Accessibility & Inclusivity**
+## **14. Epic 12: Accessibility & Inclusivity**
 
 **Epic Goal:** Ensure the app is accessible to users with disabilities and diverse needs.
 
@@ -1366,7 +1633,7 @@ All user stories follow the standard format:
 
 ---
 
-## **12. Epic 10: Platform Integration**
+## **15. Epic 10: Legacy Platform Integration**
 
 **Epic Goal:** Seamlessly integrate with mobile platforms and popular applications for maximum utility.
 
@@ -1515,12 +1782,12 @@ All user stories follow the standard format:
 
 ---
 
-## **13. Story Mapping & Sprint Planning**
+## **16. Story Mapping & Sprint Planning**
 
 ### **13.1 Release Planning**
 
-#### **MVP Release (Phase 1 - Weeks 1-8)**
-**Goal**: Core functionality for text enhancement and translation
+#### **MVP Release (Phase 1 - Weeks 1-10)**
+**Goal**: Core functionality for text enhancement, translation, and smart communication
 
 **Must-Have Stories (P0):**
 - Story 1.1: Basic Text Selection Detection
@@ -1532,41 +1799,63 @@ All user stories follow the standard format:
 - Story 3.2: Interactive Pronunciation Guide
 - Story 4.1: Automatic Quran Verse Detection
 - Story 4.2: Tajweed-Aware Pronunciation
-- Story 5.1: First-Time User Onboarding
-- Story 5.2: Permission Setup & Education
-- Story 6.1: Fast Response Times
-- Story 6.3: Error Handling & Recovery
-- Story 7.1: Data Privacy & Minimal Collection
-- Story 7.3: Transparent Data Usage
-- Story 9.1: Screen Reader Compatibility
-- Story 10.1: Deep Android Integration
+- Story 7.1: Conversation Context Analysis
+- Story 7.2: Smart Reply Generation
+- Story 8.1: General Text-to-Speech
+- Story 9.1: Advanced Android Accessibility Integration
+- Story 9.2: Advanced iOS Extension System
+- Story 10.1: First-Time User Onboarding
+- Story 10.2: Permission Setup & Education
+- Story 11.1: Fast Response Times
+- Story 11.3: Error Handling & Recovery
+- Story 12.1: Data Privacy & Minimal Collection
+- Story 12.3: Transparent Data Usage
+- Story 14.1: Screen Reader Compatibility
 
 **Sprint Breakdown:**
 - **Sprint 1-2**: Text selection system and overlay (Stories 1.1, 1.2, 1.3)
-- **Sprint 3-4**: Basic AI enhancement (Stories 2.1, 2.2)
-- **Sprint 5-6**: Translation system (Stories 3.1, 3.2)
-- **Sprint 7-8**: Quran mode and final integration (Stories 4.1, 4.2)
+- **Sprint 3-4**: Basic AI enhancement and platform integration (Stories 2.1, 2.2, 9.1, 9.2)
+- **Sprint 5-6**: Translation and smart communication (Stories 3.1, 3.2, 7.1, 7.2)
+- **Sprint 7-8**: Quran mode and universal audio (Stories 4.1, 4.2, 8.1)
+- **Sprint 9-10**: Performance optimization and user onboarding (Stories 10.1, 10.2, 11.1, 11.3)
 
-#### **Platform Expansion (Phase 2 - Weeks 9-10)**
-**Goal**: iOS support and performance optimization
-
-**Key Stories:**
-- Story 10.2: iOS Platform Integration
-- Story 6.2: Offline Functionality
-- Story 6.4: Battery & Resource Optimization
-- Story 5.3: Language & Preference Setup
-
-#### **Feature Enhancement (Phase 3 - Weeks 11-14)**
-**Goal**: Advanced features and user experience improvements
+#### **Enhanced Features (Phase 2 - Weeks 11-14)**
+**Goal**: Advanced AI features and personalization
 
 **Key Stories:**
 - Story 1.4: Context-Aware Action Suggestions
+- Story 7.3: Emotional Tone Detection
+- Story 7.4: Tone Adjustment & Modification
+- Story 8.2: Multi-Language Audio Support
+- Story 8.3: Background Audio Playback
+- Story 9.3: Conversation Context Intelligence
+- Story 9.4: Smart Keyboard Integration
+- Story 11.2: Offline Functionality
+
+#### **Polish & Advanced Features (Phase 3 - Weeks 15-18)**
+**Goal**: Enhanced user experience and advanced features
+
+**Key Stories:**
 - Story 2.3: Grammar and Style Correction
 - Story 2.4: Length Adjustment
 - Story 3.3: Bidirectional Translation
 - Story 4.3: Verse-by-Verse Navigation
-- Story 8.1: Usage Analytics & Insights
-- Story 8.2: Personalized Suggestions
+- Story 8.4: Audio Bookmarks & Navigation
+- Story 13.1: Usage Analytics & Insights
+- Story 13.2: Personalized Suggestions
+- Story 11.4: Battery & Resource Optimization
+
+#### **Enterprise & Accessibility (Phase 4 - Weeks 19-20)**
+**Goal**: Enterprise features and comprehensive accessibility
+
+**Key Stories:**
+- Story 12.2: Secure Authentication
+- Story 12.4: Content Security
+- Story 14.2: High Contrast & Visual Accessibility
+- Story 14.3: Motor Accessibility
+- Story 14.4: Cognitive Accessibility
+- Story 14.5: Multilingual Accessibility
+- Advanced enterprise features and compliance
 
 ### **13.2 Story Dependencies**
 
@@ -1593,19 +1882,24 @@ graph TD
 
 ### **13.3 Success Metrics by Epic**
 
-| Epic | Key Metrics | Target (MVP) | Target (3 months) |
-|------|-------------|--------------|-------------------|
-| Text Selection | Selection success rate | >95% | >98% |
-| Text Enhancement | User satisfaction | >4.0/5 | >4.5/5 |
-| Translation | Translation accuracy | >90% | >95% |
-| Quran Mode | Verse detection accuracy | >95% | >98% |
-| Onboarding | Completion rate | >70% | >80% |
-| Performance | Response time <2s | >90% | >95% |
-| Accessibility | Screen reader compatibility | 100% core features | 100% all features |
+| Epic | Key Metrics | Target (MVP) | Target (3 months) | Target (6 months) |
+|------|-------------|--------------|-------------------|-------------------|
+| Text Selection | Selection success rate | >95% | >98% | >99% |
+| Text Enhancement | User satisfaction | >4.0/5 | >4.5/5 | >4.7/5 |
+| Translation | Translation accuracy | >90% | >95% | >97% |
+| Quran Mode | Verse detection accuracy | >95% | >98% | >99% |
+| Smart Communication | Reply relevance score | >80% | >85% | >90% |
+| Universal Audio | Audio quality rating | >4.0/5 | >4.5/5 | >4.7/5 |
+| Platform Integration | Cross-app compatibility | >90% | >95% | >98% |
+| Onboarding | Completion rate | >70% | >80% | >85% |
+| Performance | Response time <2s | >90% | >95% | >98% |
+| Security | Privacy compliance | 100% | 100% | 100% |
+| Analytics | Feature adoption rate | >60% | >75% | >85% |
+| Accessibility | Full feature coverage | 90% | 95% | 100% |
 
 ---
 
-## **14. Definition of Done**
+## **17. Definition of Done**
 
 ### **14.1 Story Completion Criteria**
 
@@ -1684,6 +1978,7 @@ For a release to be ready for production:
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
 | 1.0 | Dec 2024 | Initial user stories creation | [Author] |
+| 2.0 | Dec 2024 | Enhanced with Smart Communication, Universal Audio, Enhanced Platform Integration, and updated architecture alignment | [Author] |
 
 ---
 
